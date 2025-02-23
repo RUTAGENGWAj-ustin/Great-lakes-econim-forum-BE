@@ -1,0 +1,57 @@
+GET http://localhost:3000/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamF5IiwiaWF0IjoxNzM4NjgxNzM0LCJleHAiOjE3Mzg2ODE3NjR9.4wyQ6Q9bYIiSYzQLiwbvU9QnErFp_Zz_5ODaso0csPA
+###
+DELETE http://localhost:4000/logout
+Content-Type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamF5IiwiaWF0IjoxNzM4NjgxNTg2fQ.6ITHuD6xi1ldXiKZHgldVWqvP9vJGCtW0RPAWfqnC2o"
+}
+###
+POST http://localhost:4000/token
+Content-Type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamF5IiwiaWF0IjoxNzM4NjgxNTg2fQ.6ITHuD6xi1ldXiKZHgldVWqvP9vJGCtW0RPAWfqnC2o"
+}
+###
+POST http://localhost:4000/login
+Content-Type: application/json
+
+{
+    "username":"jay"
+}
+###
+GET http://localhost:5000/api/auth/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTY3NGZjYzkzYWEwYWFlNTQxMzEwMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczODk2MjIzMiwiZXhwIjoxNzM4OTY1ODMyfQ.9A0ZfCLZPNUB0NVPntoKtKoFCv8H-A7cpRZFvlHK958
+###
+GET http://localhost:5000/api/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTY3NGZjYzkzYWEwYWFlNTQxMzEwMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczODk2MjIzMiwiZXhwIjoxNzM4OTY1ODMyfQ.9A0ZfCLZPNUB0NVPntoKtKoFCv8H-A7cpRZFvlHK958
+###
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "email":"justin6",
+    "password":"6666",
+    "role":"admin"
+}
+###
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{ 
+    "email":"justin6",
+    "password":"6666"
+}
+
+###
+GET  http://localhost:5000/api/news
+###
+GET  http://localhost:5000/api/events
+###
+GET  http://localhost:5000/api/speakers
+###
+GET  http://localhost:5000/api/topics
+
+

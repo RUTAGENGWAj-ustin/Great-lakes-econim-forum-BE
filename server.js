@@ -12,7 +12,8 @@ const newsRoutes = require('./routes/news');
 const sponsorRoutes = require('./routes/sponsors');
 const paymentRoutes = require('./routes/payments');
 const rsvpRoutes = require('./routes/rsvp');
-const category = require('./routes/category');
+const categoryRoutes = require("./routes/category");
+const galleryRoutes = require("./routes/gallery");
 
 // Load environment variables
 dotenv.config();
@@ -51,7 +52,8 @@ app.use('/api/news', newsRoutes);
 app.use('/api/sponsors', sponsorRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/rsvp', rsvpRoutes);
-app.use("/api/categories", category);
+app.use("/api/category", categoryRoutes );
+app.use("/api/gallery", galleryRoutes);
 
 // const PORT = process.env.PORT || 5000;
 

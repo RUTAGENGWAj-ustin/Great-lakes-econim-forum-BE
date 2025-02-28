@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const eventSchema = new mongoose.Schema({
+  imageUrl: { type: String, required: true },
   name: { type: String, required: true },
+  category: {type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
   description: { type: String },
   date: { type: Date, required: true },
   location: { type: String },

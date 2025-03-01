@@ -1,41 +1,42 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const authRoutes = require('./routes/auth');
-const eventRoutes = require('./routes/events');
-const speakerRoutes = require('./routes/speakers');
-const topicRoutes = require('./routes/topics');
-const newsRoutes = require('./routes/news');
-const sponsorRoutes = require('./routes/sponsors');
-const paymentRoutes = require('./routes/payments');
-const rsvpRoutes = require('./routes/rsvp');
-const categoryRoutes = require("./routes/category");
-const galleryRoutes = require("./routes/gallery");
+import express, { json } from 'express';
+import { connect } from 'mongoose';
+import cors from 'cors';
+import { config } from 'dotenv';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import authRoutes from './routes/auth.js';
+import eventRoutes from './routes/events.js';
+import speakerRoutes from './routes/speakers.js';
+import topicRoutes from './routes/topics.js';
+import newsRoutes from './routes/news.js';
+import sponsorRoutes from './routes/sponsors.js';
+import paymentRoutes from './routes/payments.js';
+import rsvpRoutes from './routes/rsvp.js';
+import categoryRoutes from "./routes/category.js";
+import galleryRoutes from "./routes/gallery.js";
 
+const { verify } = jwt;
 // Load environment variables
-dotenv.config();
+config();
 
 const app = express();
-app.use(express.json());
+app.use(json());
 app.use(cors());
 // console.log('in server:', process.env.JWT_SECRET);
 
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
+connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`))).catch(err => console.log(err));
 
 // Middleware to verify JWT
-defaultMiddleware = (req, res, next) => {
+const defaultMiddleware = (req, res, next) => {
   const token = req.header('Authorization');
   if (!token) return res.status(401).send('Access Denied');
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    const verified = verify(token, process.env.JWT_SECRET);
     req.user = verified;
     next();
   } catch (err) {

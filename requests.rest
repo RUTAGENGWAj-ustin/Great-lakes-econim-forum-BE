@@ -48,10 +48,34 @@ Content-Type: application/json
 ###
 GET  http://localhost:5000/api/news
 ###
+POST http://localhost:5000/api/events
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTY3MjRiOTk1M2U5MGVlNTI0ZjI4NyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDg3MjYyNCwiZXhwIjoxNzQwODc2MjI0fQ._etuR1rDaf1Ose50ywF1CE-02cCsxdNVOA11fLTqtps
+
+  {
+    "imageUrl": "https://example.com/event2.jpg",
+    "name": "Cultural Heritage Showcase",
+    "category": "605c72ef153207db2c5e9d3d", 
+    "description": "A celebration of diverse cultural traditions with food, music, and art.",
+    "date": "2025-07-10T14:00:00Z",
+    "location": "Downtown Cultural Center, Detroit, MI"
+  }
+###
 GET  http://localhost:5000/api/events
 ###
 GET  http://localhost:5000/api/speakers
 ###
 GET  http://localhost:5000/api/topics
 
+###
+POST http://localhost:5000/api/category
+Content-Type: application/json
+
+  {
+    "name": "Party",
+    "description": "Fun-filled events for socializing, networking, and entertainment."
+  }
+
+###
+ GET http://localhost:5000/api/category
 

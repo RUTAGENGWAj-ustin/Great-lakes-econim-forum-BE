@@ -32,7 +32,7 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-    "email":"justin6",
+    "email":"justin@gmail.com",
     "password":"6666",
     "role":"admin"
 }

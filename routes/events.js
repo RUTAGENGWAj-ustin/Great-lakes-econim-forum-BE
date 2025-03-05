@@ -1,16 +1,50 @@
-const express = require('express');
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Event from '../models/Event.js';
+import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
+
 const router = express.Router();
-const Event = require('../models/Event');
-const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 
-// Create Event (Admin Only)
-router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
+// Get __dirname equivalent in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Multer Storage Config
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../uploads/events/')); // Store files in 'uploads/events/'
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    const fileTypes = /jpeg|jpg|png/;
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = fileTypes.test(file.mimetype);
+    
+    if (extname && mimetype) return cb(null, true);
+    cb(new Error('Only images (jpeg, jpg, png) are allowed.'));
+  }
+});
+
+// Serve Uploaded Images
+router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Create Event (Admin Only) with Image Upload
+router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async (req, res) => {
   try {
-    const { imageUrl, name, category, description, date, location, topics, speakers, sponsors } = req.body;
+    const { name, category, description, date, location, topics, speakers, sponsors } = req.body;
+    const imageUrl = req.file ? `/uploads/events/${req.file.filename}` : null;
 
-    // Validate required fields
     if (!imageUrl || !name || !category || !date) {
-      return res.status(400).json({ msg: 'imageUrl, name, category, and date are required' });
+      return res.status(400).json({ msg: 'Image, name, category, and date are required' });
     }
 
     const newEvent = new Event({
@@ -32,6 +66,7 @@ router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 });
+
 
 // Get All Events (Populating Category, Topics, Speakers, and Sponsors)
 router.get('/', async (req, res) => {
@@ -66,10 +101,22 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Update Event (Admin Only)
-router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
+// Update Event (Admin Only) with Image Upload
+router.put('/:id', authMiddleware, adminMiddleware, upload.single('image'), async (req, res) => {
   try {
-    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { name, category, description, date, location, topics, speakers, sponsors } = req.body;
+    let imageUrl;
+
+    // If a new image is uploaded, update imageUrl
+    if (req.file) {
+      imageUrl = `/uploads/events/${req.file.filename}`;
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(
+      req.params.id,
+      { name, category, description, date, location, topics, speakers, sponsors, ...(imageUrl && { imageUrl }) },
+      { new: true }
+    );
 
     if (!updatedEvent) return res.status(404).json({ msg: 'Event not found' });
 
@@ -93,4 +140,4 @@ router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

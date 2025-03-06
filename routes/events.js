@@ -43,19 +43,22 @@ router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async 
     console.log("Request Body:", req.body);
     console.log("Uploaded File:", req.file);
 
-    const { name, category, description, date, location, topics, speakers, sponsors } = req.body;
+    const { name, category, description, date, location, topics, speakers, sponsors, pricing } = req.body;
     const imageUrl = req.file ? `/uploads/events/${req.file.filename}` : null;
 
-    // Convert JSON strings to arrays
+    // Convert JSON strings to arrays/objects
     const topicsArray = topics ? JSON.parse(topics) : [];
     const speakersArray = speakers ? JSON.parse(speakers) : [];
     const sponsorsArray = sponsors ? JSON.parse(sponsors) : [];
+    const pricingArray = pricing ? JSON.parse(pricing) : [];
     const eventDate = date ? new Date(date) : null;
 
+    // Validate required fields
     if (!imageUrl || !name || !category || !eventDate) {
       return res.status(400).json({ msg: 'Image, name, category, and date are required' });
     }
 
+    // Create new event
     const newEvent = new Event({
       imageUrl,
       name,
@@ -66,6 +69,7 @@ router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async 
       topics: topicsArray,
       speakers: speakersArray,
       sponsors: sponsorsArray,
+      pricing: pricingArray, // Add pricing field
     });
 
     await newEvent.save();
@@ -114,7 +118,7 @@ router.get('/:id', async (req, res) => {
 // Update Event (Admin Only) with Image Upload
 router.put('/:id', authMiddleware, adminMiddleware, upload.single('image'), async (req, res) => {
   try {
-    const { name, category, description, date, location, topics, speakers, sponsors } = req.body;
+    const { name, category, description, date, location, topics, speakers, sponsors, pricing } = req.body;
     let imageUrl;
 
     // If a new image is uploaded, update imageUrl
@@ -122,9 +126,27 @@ router.put('/:id', authMiddleware, adminMiddleware, upload.single('image'), asyn
       imageUrl = `/uploads/events/${req.file.filename}`;
     }
 
+    // Convert JSON strings to arrays/objects
+    const topicsArray = topics ? JSON.parse(topics) : [];
+    const speakersArray = speakers ? JSON.parse(speakers) : [];
+    const sponsorsArray = sponsors ? JSON.parse(sponsors) : [];
+    const pricingArray = pricing ? JSON.parse(pricing) : [];
+
+    // Update event
     const updatedEvent = await Event.findByIdAndUpdate(
       req.params.id,
-      { name, category, description, date, location, topics, speakers, sponsors, ...(imageUrl && { imageUrl }) },
+      {
+        name,
+        category,
+        description,
+        date,
+        location,
+        topics: topicsArray,
+        speakers: speakersArray,
+        sponsors: sponsorsArray,
+        pricing: pricingArray, // Add pricing field
+        ...(imageUrl && { imageUrl }), // Conditionally update imageUrl
+      },
       { new: true }
     );
 

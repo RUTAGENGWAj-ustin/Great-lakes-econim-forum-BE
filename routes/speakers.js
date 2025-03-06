@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage, 
-  limits: { fileSize: 5 * 1024 * 1024 }, // Limit: 5MB
+  limits: { fileSize: 10 * 1024 * 1024 }, // Limit: 10MB
   fileFilter: (req, file, cb) => {
     const fileTypes = /jpeg|jpg|png/;
     const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
@@ -34,7 +34,7 @@ const upload = multer({
 router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async (req, res) => {
   try {
     const { name, bio, expertise } = req.body;
-    const image = req.file ? req.file.path : null; // Get uploaded file path
+   const image = req.file ? `http://localhost:5000/uploads/speakers/${req.file.filename}` : null; // Get uploaded file path
     
     const newSpeaker = new Speaker({ name, bio, expertise, image });
     await newSpeaker.save();

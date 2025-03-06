@@ -14,6 +14,12 @@ import paymentRoutes from './routes/payments.js';
 import rsvpRoutes from './routes/rsvp.js';
 import categoryRoutes from "./routes/category.js";
 import galleryRoutes from "./routes/gallery.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 const { verify } = jwt;
 // Load environment variables
@@ -22,6 +28,8 @@ config();
 const app = express();
 app.use(json());
 app.use(cors());
+// Serve static files from the "uploads" directory
+app.use('/uploads', express.static(path.join(__dirname + '/speakers')));
 // console.log('in server:', process.env.JWT_SECRET);
 
 

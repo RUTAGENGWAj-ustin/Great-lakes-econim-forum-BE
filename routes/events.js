@@ -40,10 +40,19 @@ router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 // Create Event (Admin Only) with Image Upload
 router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async (req, res) => {
   try {
+    console.log("Request Body:", req.body);
+    console.log("Uploaded File:", req.file);
+
     const { name, category, description, date, location, topics, speakers, sponsors } = req.body;
     const imageUrl = req.file ? `/uploads/events/${req.file.filename}` : null;
 
-    if (!imageUrl || !name || !category || !date) {
+    // Convert JSON strings to arrays
+    const topicsArray = topics ? JSON.parse(topics) : [];
+    const speakersArray = speakers ? JSON.parse(speakers) : [];
+    const sponsorsArray = sponsors ? JSON.parse(sponsors) : [];
+    const eventDate = date ? new Date(date) : null;
+
+    if (!imageUrl || !name || !category || !eventDate) {
       return res.status(400).json({ msg: 'Image, name, category, and date are required' });
     }
 
@@ -52,11 +61,11 @@ router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async 
       name,
       category,
       description,
-      date,
+      date: eventDate,
       location,
-      topics,
-      speakers,
-      sponsors,
+      topics: topicsArray,
+      speakers: speakersArray,
+      sponsors: sponsorsArray,
     });
 
     await newEvent.save();
@@ -66,6 +75,7 @@ router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async 
     res.status(500).json({ msg: 'Server error' });
   }
 });
+
 
 
 // Get All Events (Populating Category, Topics, Speakers, and Sponsors)

@@ -33,7 +33,7 @@ const upload = multer({
 router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async (req, res) => {
   try {
     const { title, content, author } = req.body;
-    const image = req.file ? req.file.path : null; // Get uploaded file path
+    const image = req.file ?  `/uploads/events/${req.file.filename}` : null; // Get uploaded file path
 
     const newNews = new News({ title, content, image, author });
     await newNews.save();

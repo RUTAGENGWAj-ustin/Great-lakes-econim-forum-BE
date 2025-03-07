@@ -28,8 +28,16 @@ config();
 const app = express();
 app.use(json());
 app.use(cors());
+
+// app.use('/uploads', express.static('uploads'));
 // Serve static files from the "uploads" directory
-app.use('/uploads', express.static(path.join(__dirname + '/speakers')));
+app.use('/uploads/speakers', express.static(path.join(__dirname + '/uploads/speakers')));
+// app.use('/uploads', express.static(path.join(__dirname + '/events')));
+// app.use('/uploads', express.static(path.join(__dirname + '/Gallery')));
+// app.use('/uploads', express.static(path.join(__dirname + '/news')));
+// app.use('/uploads', express.static(path.join(__dirname + '/events')));
+
+
 // console.log('in server:', process.env.JWT_SECRET);
 
 

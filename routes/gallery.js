@@ -3,6 +3,8 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const Gallery = require("../models/Gallery");
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
+
 
 const router = express.Router();
 
@@ -89,23 +91,39 @@ router.get("/:id", async (req, res) => {
 });
 
 // 📌 Update a gallery image
-router.put("/:id", async (req, res) => {
-  try {
-    const { imageUrl, caption } = req.body;
+router.put( "/:id",
+  authMiddleware,
+  adminMiddleware,
+  upload.array("images"), // Use multer to handle multiple file uploads
+  async (req, res) => {
+    try {
+      const { event, caption } = req.body;
+      const images = req.files; // Access the uploaded image files
 
-    const updatedGallery = await Gallery.findByIdAndUpdate(
-      req.params.id,
-      { imageUrl, caption },
-      { new: true }
-    );
+      // Prepare the update object
+      const updateData = {
+        event,
+        caption,
+      };
 
-    if (!updatedGallery) return res.status(404).json({ message: "Gallery item not found" });
+      // If new images are uploaded, add them to the update object
+      if (images && images.length > 0) {
+        updateData.images = images.map((file) => `/uploads/gallery/${file.filename}`);
+      }
 
-    res.json(updatedGallery);
-  } catch (error) {
-    res.status(500).json({ message: "Error updating gallery item", error });
+      // Update the gallery item in the database
+      const updatedGallery = await Gallery.findByIdAndUpdate(req.params.id, updateData, {
+        new: true,
+      });
+
+      if (!updatedGallery) return res.status(404).json({ msg: "Gallery item not found" });
+      res.json(updatedGallery);
+    } catch (err) {
+      console.error("Error updating gallery:", err);
+      res.status(500).json({ msg: "Server error" });
+    }
   }
-});
+);
 
 // 📌 Delete a gallery image
 router.delete("/:id", async (req, res) => {

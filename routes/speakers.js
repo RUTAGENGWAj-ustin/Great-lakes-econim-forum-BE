@@ -68,15 +68,41 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update Speaker (Admin Only)
-router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
-  try {
-    const speaker = await Speaker.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!speaker) return res.status(404).json({ msg: 'Speaker not found' });
-    res.json(speaker);
-  } catch (err) {
-    res.status(500).json({ msg: 'Server error' });
+router.put(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  upload.single("image"), // Use multer to handle file uploads
+  async (req, res) => {
+    try {
+      const { name, bio, expertise } = req.body;
+      const image = req.file; // Access the uploaded image file
+
+      // Prepare the update object
+      const updateData = {
+        name,
+        bio,
+        expertise,
+      };
+
+      // If a new image is uploaded, add it to the update object
+      if (image) {
+        updateData.image = image.path; // Save the file path to the database
+      }
+
+      // Update the speaker in the database
+      const speaker = await Speaker.findByIdAndUpdate(req.params.id, updateData, {
+        new: true,
+      });
+
+      if (!speaker) return res.status(404).json({ msg: "Speaker not found" });
+      res.json(speaker);
+    } catch (err) {
+      console.error("Error updating speaker:", err);
+      res.status(500).json({ msg: "Server error" });
+    }
   }
-});
+);
 
 // Delete Speaker (Admin Only)
 router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {

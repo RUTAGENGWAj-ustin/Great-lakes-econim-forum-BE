@@ -66,15 +66,41 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update News (Admin Only)
-router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
-  try {
-    const newsItem = await News.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!newsItem) return res.status(404).json({ msg: 'News article not found' });
-    res.json(newsItem);
-  } catch (err) {
-    res.status(500).json({ msg: 'Server error' });
+router.put(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  upload.single("image"), // Use multer to handle file uploads
+  async (req, res) => {
+    try {
+      const { title, content, author } = req.body;
+      const image = req.file; // Access the uploaded image file
+
+      // Prepare the update object
+      const updateData = {
+        title,
+        content,
+        author,
+      };
+
+      // If a new image is uploaded, add it to the update object
+      if (image) {
+        updateData.image = image.path; // Save the file path to the database
+      }
+
+      // Update the news item in the database
+      const newsItem = await News.findByIdAndUpdate(req.params.id, updateData, {
+        new: true,
+      });
+
+      if (!newsItem) return res.status(404).json({ msg: "News article not found" });
+      res.json(newsItem);
+    } catch (err) {
+      console.error("Error updating news:", err);
+      res.status(500).json({ msg: "Server error" });
+    }
   }
-});
+);
 
 // Delete News (Admin Only)
 router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {

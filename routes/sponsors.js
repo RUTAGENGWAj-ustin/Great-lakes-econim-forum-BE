@@ -67,15 +67,42 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update Sponsor (Admin Only)
-router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
-  try {
-    const sponsor = await Sponsor.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!sponsor) return res.status(404).json({ msg: 'Sponsor not found' });
-    res.json(sponsor);
-  } catch (err) {
-    res.status(500).json({ msg: 'Server error' });
+router.put(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  upload.single("logo"), // Use multer to handle file uploads
+  async (req, res) => {
+    try {
+      const { name, website, description } = req.body;
+      let logo;
+
+      // If a new logo is uploaded, update logoUrl
+      if (req.file) {
+        logo = `/uploads/sponsors/${req.file.filename}`;
+      }
+
+      // Update sponsor
+      const updatedSponsor = await Sponsor.findByIdAndUpdate(
+        req.params.id,
+        {
+          name,
+          website,
+          description,
+          ...(logo && { logo }), // Conditionally update logoUrl
+        },
+        { new: true }
+      );
+
+      if (!updatedSponsor) return res.status(404).json({ msg: "Sponsor not found" });
+
+      res.json(updatedSponsor);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ msg: "Server error" });
+    }
   }
-});
+);
 
 // Delete Sponsor (Admin Only)
 router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {

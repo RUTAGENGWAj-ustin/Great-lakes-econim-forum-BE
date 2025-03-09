@@ -40,7 +40,7 @@ router.post("/", upload.array("images", 10), async (req, res) => {
 
     const galleryEntries = req.files.map((file, index) => ({
       event,
-      imageUrl: `/uploads/Gallery/${file.filename}`,
+      imageUrl: `uploads/Gallery/${file.filename}`,
       caption: captionArray[index] || "", // Assign caption if available
     }));
 
@@ -53,7 +53,7 @@ router.post("/", upload.array("images", 10), async (req, res) => {
 });
 
 // 📌 Serve uploaded images statically
-router.use("/uploads/Gallery", express.static(uploadDir));
+router.use("uploads/Gallery", express.static(uploadDir));
 
 
 // 📌 Get all gallery images

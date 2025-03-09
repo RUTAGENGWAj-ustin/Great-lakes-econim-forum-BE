@@ -79,7 +79,7 @@ router.put(
 
       // If a new logo is uploaded, update logoUrl
       if (req.file) {
-        logo = `/uploads/sponsors/${req.file.filename}`;
+        logo = `uploads/sponsor/${req.file.filename}`;
       }
 
       // Update sponsor

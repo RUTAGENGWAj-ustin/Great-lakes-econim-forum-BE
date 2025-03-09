@@ -29,17 +29,6 @@ const app = express();
 app.use(json());
 app.use(cors());
 
-// app.use('/uploads', express.static('uploads'));
-// Serve static files from the "uploads" directory
-app.use('/uploads/speakers', express.static(path.join(__dirname + '/uploads/speakers')));
-// app.use('/uploads', express.static(path.join(__dirname + '/events')));
-// app.use('/uploads', express.static(path.join(__dirname + '/Gallery')));
-// app.use('/uploads', express.static(path.join(__dirname + '/news')));
-// app.use('/uploads', express.static(path.join(__dirname + '/events')));
-
-
-// console.log('in server:', process.env.JWT_SECRET);
-
 
 // Connect to MongoDB
 connect(process.env.MONGO_URI, {
@@ -61,6 +50,7 @@ const defaultMiddleware = (req, res, next) => {
 };
 
 // Routes
+app.use('/uploads', express.static('uploads'));
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/speakers', speakerRoutes);

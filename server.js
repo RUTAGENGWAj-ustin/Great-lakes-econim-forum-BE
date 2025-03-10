@@ -16,6 +16,9 @@ import categoryRoutes from "./routes/category.js";
 import galleryRoutes from "./routes/gallery.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bodyParser from "body-parser";
+import nodemailer from "nodemailer";
+import "dotenv/config";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,6 +31,7 @@ config();
 const app = express();
 app.use(json());
 app.use(cors());
+app.use(bodyParser.json());
 
 
 // Connect to MongoDB
@@ -49,8 +53,39 @@ const defaultMiddleware = (req, res, next) => {
   }
 };
 
+// Nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER, // Your Gmail address
+    pass: process.env.EMAIL_PASS, // Your Gmail app password
+  },
+});
+
+// Email sending endpoint
+app.post("/send-email", (req, res) => {
+  const { name, email, message } = req.body;
+
+  const mailOptions = {
+    from: email, // Sender's email
+    to: "just123@gmail.com", // Recipient's email
+    subject: `New Message from ${name}`,
+    text: message,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email:", error);
+      return res.status(500).send("Error sending email");
+    }
+    console.log("Email sent:", info.response);
+    res.status(200).send("Email sent successfully");
+  });
+});
+
 // Routes
 app.use('/uploads', express.static('uploads'));
+// app.use('/send-email',email)
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/speakers', speakerRoutes);

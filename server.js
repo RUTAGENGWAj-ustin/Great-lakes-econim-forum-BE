@@ -14,14 +14,18 @@ import paymentRoutes from './routes/payments.js';
 import rsvpRoutes from './routes/rsvp.js';
 import categoryRoutes from "./routes/category.js";
 import galleryRoutes from "./routes/gallery.js";
+import advertRoutes from "./routes/advert.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bodyParser from "body-parser";
 import nodemailer from "nodemailer";
 import "dotenv/config";
 
+
+// Get __dirname equivalent in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 
 const { verify } = jwt;
@@ -32,6 +36,10 @@ const app = express();
 app.use(json());
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.json());
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 
 // Connect to MongoDB
@@ -83,10 +91,10 @@ app.post("/send-email", (req, res) => {
   });
 });
 
-// Routes
-app.use('/uploads', express.static('uploads'));
+
 // app.use('/send-email',email)
 app.use('/api/auth', authRoutes);
+app.use("/api/adverts", advertRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/speakers', speakerRoutes);
 app.use('/api/topics', topicRoutes);

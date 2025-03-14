@@ -37,7 +37,7 @@ const upload = multer({
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { title, description, link } = req.body;
-    const image = `/uploads/advert/${file.filename}`; // Get the uploaded file path
+    const image = `/uploads/advert/${req.file.filename}`; // Get the uploaded file path
 
     if (!image) {
       return res.status(400).json({ error: "Image is required" });
@@ -78,7 +78,7 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const { title, description, link } = req.body;
-    const image = req.file ? req.file.path : null; // Get the uploaded file path
+    const image = `/uploads/advert/${file.filename}`; // Get the uploaded file path
 
     const updateData = { title, description, link };
     if (image) updateData.image = image; // Update image only if a new one is uploaded

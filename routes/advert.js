@@ -77,21 +77,24 @@ router.get("/:id", async (req, res) => {
 // Update an advert by ID (with optional image upload)
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
+    const { id } = req.params;
     const { title, description, link } = req.body;
-    const image = `/uploads/advert/${file.filename}`; // Get the uploaded file path
+    const image = req.file ? `/uploads/advert/${req.file.filename}` : null;
 
     const updateData = { title, description, link };
-    if (image) updateData.image = image; // Update image only if a new one is uploaded
+    if (image) updateData.image = image;
 
-    const advert = await Advert.findByIdAndUpdate(req.params.id, updateData, {
+    const advert = await Advert.findByIdAndUpdate(id, updateData, {
       new: true, // Return the updated document
     });
 
     if (!advert) {
       return res.status(404).json({ error: "Advert not found" });
     }
+
     res.status(200).json(advert);
   } catch (error) {
+    console.error("Error updating advert:", error);
     res.status(500).json({ error: "Failed to update advert" });
   }
 });

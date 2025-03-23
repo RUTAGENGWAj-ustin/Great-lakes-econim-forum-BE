@@ -2,6 +2,7 @@
   "name": "great-lakes-econim-forum",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "devStart": "nodemon server.js",
     "devStartAuth": "nodemon authServer.js",

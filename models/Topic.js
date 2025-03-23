@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const topicSchema = new mongoose.Schema({
+const topicSchema = new Schema({
   name: { type: String, required: true },
   description: { type: String },
 });
 
-const Topic = mongoose.model('Topic', topicSchema);
+const Topic = model('Topic', topicSchema);
 
-module.exports = Topic;
+export default Topic;

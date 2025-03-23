@@ -1,13 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const Sponsor = require('../models/Sponsor');
-const { authMiddleware, adminMiddleware } = require('../middleware/auth');
+import { Router } from 'express';
+const router = Router();
+import Sponsor, { find, findById, findByIdAndUpdate, findByIdAndDelete } from '../models/Sponsor';
+import { authMiddleware, adminMiddleware } from '../middleware/auth';
 
-const multer = require('multer');
-const path = require('path');
+import multer, { diskStorage } from 'multer';
+import { extname as _extname } from 'path';
 
 // Configure Multer Storage
-const storage = multer.diskStorage({
+const storage = diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/sponsor/'); // Store files in 'uploads/logos' folder
   },
@@ -21,7 +21,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
   fileFilter: (req, file, cb) => {
     const fileTypes = /jpeg|jpg|png/;
-    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const extname = fileTypes.test(_extname(file.originalname).toLowerCase());
     const mimetype = fileTypes.test(file.mimetype);
 
     if (extname && mimetype) return cb(null, true);
@@ -48,7 +48,7 @@ router.post('/', authMiddleware, adminMiddleware, upload.single('logo'), async (
 // Get All Sponsors
 router.get('/', async (req, res) => {
   try {
-    const sponsors = await Sponsor.find();
+    const sponsors = await find();
     res.json(sponsors);
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });
@@ -58,7 +58,7 @@ router.get('/', async (req, res) => {
 // Get Sponsor by ID
 router.get('/:id', async (req, res) => {
   try {
-    const sponsor = await Sponsor.findById(req.params.id);
+    const sponsor = await findById(req.params.id);
     if (!sponsor) return res.status(404).json({ msg: 'Sponsor not found' });
     res.json(sponsor);
   } catch (err) {
@@ -83,7 +83,7 @@ router.put(
       }
 
       // Update sponsor
-      const updatedSponsor = await Sponsor.findByIdAndUpdate(
+      const updatedSponsor = await findByIdAndUpdate(
         req.params.id,
         {
           name,
@@ -107,7 +107,7 @@ router.put(
 // Delete Sponsor (Admin Only)
 router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
-    const sponsor = await Sponsor.findByIdAndDelete(req.params.id);
+    const sponsor = await findByIdAndDelete(req.params.id);
     if (!sponsor) return res.status(404).json({ msg: 'Sponsor not found' });
     res.json({ msg: 'Sponsor deleted' });
   } catch (err) {
@@ -115,4 +115,4 @@ router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const newsSchema = new mongoose.Schema({
+const newsSchema = new Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
   image: { type: String }, // Image URL
@@ -8,6 +8,6 @@ const newsSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
 });
 
-const News = mongoose.model('News', newsSchema);
+const News = model('News', newsSchema);
 
-module.exports = News;
+export default News;

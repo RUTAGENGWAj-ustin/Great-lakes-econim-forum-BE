@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const rsvpSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  eventId: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
+const rsvpSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  eventId: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
   attending: { type: Boolean, required: true }, // True if attending, false if not
 });
 
-const Rsvp = mongoose.model('Rsvp', rsvpSchema);
+const Rsvp = model('Rsvp', rsvpSchema);
 
-module.exports = Rsvp;
+export default Rsvp;

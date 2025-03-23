@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const Rsvp = require('../models/Rsvp'); // Assuming you have an RSVP model
-const { authMiddleware } = require('../middleware/auth');
+import { Router } from 'express';
+const router = Router();
+import Rsvp, { find, findOne } from '../models/Rsvp'; // Assuming you have an RSVP model
+import { authMiddleware } from '../middleware/auth';
 
 // RSVP for an Event (User)
 router.post('/', authMiddleware, async (req, res) => {
@@ -25,7 +25,7 @@ router.post('/', authMiddleware, async (req, res) => {
 // Get RSVPs for a specific event
 router.get('/:eventId', async (req, res) => {
   try {
-    const rsvps = await Rsvp.find({ eventId: req.params.eventId });
+    const rsvps = await find({ eventId: req.params.eventId });
     res.json(rsvps);
   } catch (err) {
     res.status(500).json({ msg: 'Error retrieving RSVPs' });
@@ -35,7 +35,7 @@ router.get('/:eventId', async (req, res) => {
 // Get User's RSVP Status for a Specific Event
 router.get('/user/:eventId', authMiddleware, async (req, res) => {
   try {
-    const rsvp = await Rsvp.findOne({ eventId: req.params.eventId, user: req.user.id });
+    const rsvp = await findOne({ eventId: req.params.eventId, user: req.user.id });
     if (!rsvp) return res.status(404).json({ msg: 'RSVP not found' });
     res.json(rsvp);
   } catch (err) {
@@ -43,4 +43,4 @@ router.get('/user/:eventId', authMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

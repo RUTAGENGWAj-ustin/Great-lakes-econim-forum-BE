@@ -1,14 +1,14 @@
 // routes/speakers.js
-const express = require('express');
-const router = express.Router();
-const Speaker = require('../models/Speaker');
-const { authMiddleware, adminMiddleware } = require('../middleware/auth');
+import { Router } from 'express';
+const router = Router();
+import Speaker, { find, findById, findByIdAndUpdate, findByIdAndDelete } from '../models/Speaker';
+import { authMiddleware, adminMiddleware } from '../middleware/auth';
 
-const multer = require('multer');
-const path = require('path');
+import multer, { diskStorage } from 'multer';
+import { extname as _extname } from 'path';
 
 // Configure Multer storage
-const storage = multer.diskStorage({
+const storage = diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/speakers/'); // Store files in the 'uploads' directory
   },
@@ -22,7 +22,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // Limit: 10MB
   fileFilter: (req, file, cb) => {
     const fileTypes = /jpeg|jpg|png/;
-    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const extname = fileTypes.test(_extname(file.originalname).toLowerCase());
     const mimetype = fileTypes.test(file.mimetype);
     
     if (extname && mimetype) return cb(null, true);
@@ -49,7 +49,7 @@ router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async 
 // Get All Speakers
 router.get('/', async (req, res) => {
   try {
-    const speakers = await Speaker.find();
+    const speakers = await find();
     res.json(speakers);
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });
@@ -59,7 +59,7 @@ router.get('/', async (req, res) => {
 // Get Speaker by ID
 router.get('/:id', async (req, res) => {
   try {
-    const speaker = await Speaker.findById(req.params.id);
+    const speaker = await findById(req.params.id);
     if (!speaker) return res.status(404).json({ msg: 'Speaker not found' });
     res.json(speaker);
   } catch (err) {
@@ -91,7 +91,7 @@ router.put(
       }
 
       // Update the speaker in the database
-      const speaker = await Speaker.findByIdAndUpdate(req.params.id, updateData, {
+      const speaker = await findByIdAndUpdate(req.params.id, updateData, {
         new: true,
       });
 
@@ -107,7 +107,7 @@ router.put(
 // Delete Speaker (Admin Only)
 router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
-    const speaker = await Speaker.findByIdAndDelete(req.params.id);
+    const speaker = await findByIdAndDelete(req.params.id);
     if (!speaker) return res.status(404).json({ msg: 'Speaker not found' });
     res.json({ msg: 'Speaker deleted' });
   } catch (err) {
@@ -115,4 +115,4 @@ router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

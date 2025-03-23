@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const { authMiddleware } = require('../middleware/auth');
-const Payment = require('../models/Payment'); // Assuming you have a Payment model
+import { Router } from 'express';
+const router = Router();
+import { authMiddleware } from '../middleware/auth';
+import Payment, { findOneAndUpdate, findById } from '../models/Payment'; // Assuming you have a Payment model
 // const { createPaymentIntent, confirmPaymentIntent } = require('../utils/paymentGateway'); // A mock of your payment gateway integration
 
 // Create Payment (User)
@@ -38,7 +38,7 @@ router.post('/confirm', authMiddleware, async (req, res) => {
     
     if (!confirmedPayment) return res.status(400).json({ msg: 'Payment failed' });
     
-    const payment = await Payment.findOneAndUpdate(
+    const payment = await findOneAndUpdate(
       { paymentIntentId },
       { status: 'confirmed' },
       { new: true }
@@ -53,7 +53,7 @@ router.post('/confirm', authMiddleware, async (req, res) => {
 // Get Payment Status (Admin & User)
 router.get('/:id', authMiddleware, async (req, res) => {
   try {
-    const payment = await Payment.findById(req.params.id);
+    const payment = await findById(req.params.id);
     if (!payment) return res.status(404).json({ msg: 'Payment not found' });
     res.json(payment);
   } catch (err) {
@@ -61,4 +61,4 @@ router.get('/:id', authMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,13 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const News = require('../models/News');
-const { authMiddleware, adminMiddleware } = require('../middleware/auth');
+import { Router } from 'express';
+const router = Router();
+import News, { find, findById, findByIdAndUpdate, findByIdAndDelete } from '../models/News';
+import { authMiddleware, adminMiddleware } from '../middleware/auth';
 
-const multer = require('multer');
-const path = require('path');
+import multer, { diskStorage } from 'multer';
+import { extname as _extname } from 'path';
 
 // Configure Multer Storage
-const storage = multer.diskStorage({
+const storage = diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/news/'); // Store files in 'uploads/news' folder
   },
@@ -21,7 +21,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
   fileFilter: (req, file, cb) => {
     const fileTypes = /jpeg|jpg|png/;
-    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const extname = fileTypes.test(_extname(file.originalname).toLowerCase());
     const mimetype = fileTypes.test(file.mimetype);
 
     if (extname && mimetype) return cb(null, true);
@@ -47,7 +47,7 @@ router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async 
 // Get All News
 router.get('/', async (req, res) => {
   try {
-    const news = await News.find();
+    const news = await find();
     res.json(news);
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });
@@ -57,7 +57,7 @@ router.get('/', async (req, res) => {
 // Get News by ID
 router.get('/:id', async (req, res) => {
   try {
-    const newsItem = await News.findById(req.params.id);
+    const newsItem = await findById(req.params.id);
     if (!newsItem) return res.status(404).json({ msg: 'News article not found' });
     res.json(newsItem);
   } catch (err) {
@@ -89,7 +89,7 @@ router.put(
       }
 
       // Update the news item in the database
-      const newsItem = await News.findByIdAndUpdate(req.params.id, updateData, {
+      const newsItem = await findByIdAndUpdate(req.params.id, updateData, {
         new: true,
       });
 
@@ -105,7 +105,7 @@ router.put(
 // Delete News (Admin Only)
 router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
-    const newsItem = await News.findByIdAndDelete(req.params.id);
+    const newsItem = await findByIdAndDelete(req.params.id);
     if (!newsItem) return res.status(404).json({ msg: 'News article not found' });
     res.json({ msg: 'News article deleted' });
   } catch (err) {
@@ -113,4 +113,4 @@ router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

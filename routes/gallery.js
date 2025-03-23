@@ -1,15 +1,14 @@
-const express = require("express");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const Gallery = require("../models/Gallery");
-const { authMiddleware, adminMiddleware } = require('../middleware/auth');
-
+import express from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import Gallery from "../models/Gallery.js";
+import { authMiddleware, adminMiddleware } from "../middleware/auth.js";
 
 const router = express.Router();
 
 // Ensure uploads directory exists
-const uploadDir = path.join(__dirname, "../uploads/Gallery");
+const uploadDir = path.join(process.cwd(), "uploads/Gallery");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -45,7 +44,7 @@ router.post("/", upload.array("images", 10), async (req, res) => {
     }));
 
     const savedGalleries = await Gallery.insertMany(galleryEntries);
-    
+
     res.status(201).json(savedGalleries);
   } catch (error) {
     res.status(500).json({ message: "Error uploading images", error });
@@ -53,8 +52,7 @@ router.post("/", upload.array("images", 10), async (req, res) => {
 });
 
 // 📌 Serve uploaded images statically
-router.use("uploads/Gallery", express.static(uploadDir));
-
+router.use("/uploads/Gallery", express.static(uploadDir));
 
 // 📌 Get all gallery images
 router.get("/", async (req, res) => {
@@ -91,7 +89,8 @@ router.get("/:id", async (req, res) => {
 });
 
 // 📌 Update a gallery image
-router.put( "/:id",
+router.put(
+  "/:id",
   authMiddleware,
   adminMiddleware,
   upload.array("images"), // Use multer to handle multiple file uploads
@@ -126,7 +125,7 @@ router.put( "/:id",
 );
 
 // 📌 Delete a gallery image
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const deletedGallery = await Gallery.findByIdAndDelete(req.params.id);
 
@@ -138,4 +137,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

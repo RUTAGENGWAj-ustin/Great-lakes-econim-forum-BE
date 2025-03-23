@@ -1,12 +1,12 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const speakerSchema = new mongoose.Schema({
+const speakerSchema = new Schema({
   name: { type: String, required: true },
   bio: { type: String },
   expertise: { type: String },
   image: { type: String }, // Image URL
 });
 
-const Speaker = mongoose.model('Speaker', speakerSchema);
+const Speaker = model('Speaker', speakerSchema);
 
-module.exports = Speaker;
+export default Speaker;

@@ -1,11 +1,10 @@
-// middleware/auth.js
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import dotenv from 'dotenv';
 
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+dotenv.config();
 
-require('dotenv').config();
-// console.log(' in auth:',process.env.JWT_SECRET);
-
+// Authentication middleware
 const authMiddleware = (req, res, next) => {
   const token = req.header('Authorization');
   if (!token) return res.status(401).json({ msg: 'Access Denied' });
@@ -19,6 +18,7 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+// Admin middleware
 const adminMiddleware = (req, res, next) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ msg: 'Access Denied: Admins only' });
@@ -26,4 +26,5 @@ const adminMiddleware = (req, res, next) => {
   next();
 };
 
-module.exports = { authMiddleware, adminMiddleware };
+// Export the middleware functions
+export { authMiddleware, adminMiddleware };

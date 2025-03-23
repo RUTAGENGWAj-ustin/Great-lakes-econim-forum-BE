@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const paymentSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+const paymentSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   amount: { type: Number, required: true },
   currency: { type: String, required: true },
-  eventId: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
+  eventId: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
   status: { type: String, enum: ['pending', 'confirmed', 'failed'], default: 'pending' },
   paymentIntentId: { type: String }, // Payment gateway intent ID
 });
 
-const Payment = mongoose.model('Payment', paymentSchema);
+const Payment = model('Payment', paymentSchema);
 
-module.exports = Payment;
+export default Payment;

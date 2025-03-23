@@ -1,12 +1,12 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const sponsorSchema = new mongoose.Schema({
+const sponsorSchema = new Schema({
   name: { type: String, required: true },
   logo: { type: String }, // Logo image URL
   website: { type: String },
   description: { type: String },
 });
 
-const Sponsor = mongoose.model('Sponsor', sponsorSchema);
+const Sponsor = model('Sponsor', sponsorSchema);
 
-module.exports = Sponsor;
+export default Sponsor;

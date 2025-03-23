@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const router = Router();
-import News, { find, findById, findByIdAndUpdate, findByIdAndDelete } from '../models/News';
-import { authMiddleware, adminMiddleware } from '../middleware/auth';
+import News from '../models/News.js';
+import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
 
 import multer, { diskStorage } from 'multer';
 import { extname as _extname } from 'path';

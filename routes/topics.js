@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const router = Router();
-import Topic, { find, findById, findByIdAndUpdate, findByIdAndDelete } from '../models/Topic';
-import { authMiddleware, adminMiddleware } from '../middleware/auth';
+import Topic from '../models/Topic.js';
+import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
 
 // Create Topic (Admin Only)
 router.post('/', authMiddleware, adminMiddleware, async (req, res) => {

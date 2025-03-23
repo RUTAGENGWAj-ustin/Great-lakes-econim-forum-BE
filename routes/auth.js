@@ -1,10 +1,12 @@
 // routes/auth.js
 import { Router } from 'express';
-import { genSalt, compareSync } from 'bcryptjs';
-import { sign } from 'jsonwebtoken';
-import User, { findOne, findById, find } from '../models/User';
+import bcryptjs from 'bcryptjs';
+const { genSalt,compareSync  } = bcryptjs;
+import jwt from 'jsonwebtoken'; // Import as default
+const { sign } = jwt;
+import User from '../models/User.js';
 const router = Router();
-import { authMiddleware, adminMiddleware } from '../middleware/auth';
+import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
 
 // Register User
 router.post('/register', async (req, res) => {

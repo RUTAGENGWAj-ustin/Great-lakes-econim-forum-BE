@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const router = Router();
-import Sponsor, { find, findById, findByIdAndUpdate, findByIdAndDelete } from '../models/Sponsor';
-import { authMiddleware, adminMiddleware } from '../middleware/auth';
+import Sponsor from '../models/Sponsor.js';
+import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
 
 import multer, { diskStorage } from 'multer';
 import { extname as _extname } from 'path';

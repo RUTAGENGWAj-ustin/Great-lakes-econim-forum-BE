@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const router = Router();
-import Rsvp, { find, findOne } from '../models/Rsvp'; // Assuming you have an RSVP model
-import { authMiddleware } from '../middleware/auth';
+import Rsvp from '../models/Rsvp.js'; // Assuming you have an RSVP model
+import { authMiddleware } from '../middleware/auth.js';
 
 // RSVP for an Event (User)
 router.post('/', authMiddleware, async (req, res) => {

@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { genSalt, hash } from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
+const { genSalt, hash } = bcryptjs;
 
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const router = Router();
-import { authMiddleware } from '../middleware/auth';
-import Payment, { findOneAndUpdate, findById } from '../models/Payment'; // Assuming you have a Payment model
+import { authMiddleware } from '../middleware/auth.js';
+import Payment from '../models/Payment.js'; // Assuming you have a Payment model
 // const { createPaymentIntent, confirmPaymentIntent } = require('../utils/paymentGateway'); // A mock of your payment gateway integration
 
 // Create Payment (User)

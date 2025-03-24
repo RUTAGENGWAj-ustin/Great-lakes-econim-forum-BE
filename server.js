@@ -106,4 +106,4 @@ app.use("/api/category", categoryRoutes );
 app.use("/api/gallery", galleryRoutes);
 
 // const PORT = process.env.PORT || 5000;
-export default app;
+export default app; 

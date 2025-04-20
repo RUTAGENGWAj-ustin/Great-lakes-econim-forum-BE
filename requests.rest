@@ -28,10 +28,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ2NDg5M
 GET http://localhost:5000/api/auth/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTY3NGZjYzkzYWEwYWFlNTQxMzEwMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczODk2MjIzMiwiZXhwIjoxNzM4OTY1ODMyfQ.9A0ZfCLZPNUB0NVPntoKtKoFCv8H-A7cpRZFvlHK958
 ###
-POST https://great-lakes-econim-forum-be.onrender.com/api/auth/register
+# POST https://great-lakes-econim-forum-be.onrender.com/api/auth/register
+POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
-{
+{   
+    "name":"Justin",
     "email":"justin@gmail.com",
     "password":"justin",
     "role":"admin"
@@ -46,7 +48,7 @@ Content-Type: application/json
 }
 
 ###
-GET  http://localhost:5000/api/news
+GET  http://localhost:5000/api/category
 ###
 POST http://localhost:5000/api/events
 Content-Type: application/json
@@ -94,7 +96,7 @@ Content-Type: application/json
 
  
 ###
- GET http://localhost:5000/api/sponsors
+GET http://localhost:5000/api/sponsors
 
 
 ###

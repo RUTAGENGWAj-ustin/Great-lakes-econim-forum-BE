@@ -28,12 +28,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ2NDg5M
 GET http://localhost:5000/api/auth/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTY3NGZjYzkzYWEwYWFlNTQxMzEwMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczODk2MjIzMiwiZXhwIjoxNzM4OTY1ODMyfQ.9A0ZfCLZPNUB0NVPntoKtKoFCv8H-A7cpRZFvlHK958
 ###
-POST http://localhost:5000/api/auth/register
+POST https://great-lakes-econim-forum-be.onrender.com/api/auth/register
 Content-Type: application/json
 
 {
     "email":"justin@gmail.com",
-    "password":"6666",
+    "password":"justin",
     "role":"admin"
 }
 ###
@@ -64,14 +64,14 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ2NDg5M2NkMGNl
     "sponsors":["67c77ffe39a45b100ecb317f", "67c7800d39a45b100ecb3181"]
   }
 ###
-GET  http://localhost:5000/api/events
+GET  https://great-lakes-econim-forum-be.onrender.com/api/events
 ###
-GET  http://localhost:5000/api/speakers
+GET  https://great-lakes-econim-forum-be.onrender.com/api/speakers
 ###
-GET  http://localhost:5000/api/topics
+GET  https://great-lakes-econim-forum-be.onrender.com/api/topics
 
 ###
-POST http://localhost:5000/api/topics
+POST https://great-lakes-econim-forum-be.onrender.com/api/topics
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ2NDg5M2NkMGNlZGJjY2U3MTA1MyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MTEyNDExMywiZXhwIjoxNzQxMTI3NzEzfQ.wozQ3BK2bEYp32tGbDZivpOM-oLQQA94jjl9fTGd0Bs
 
@@ -90,7 +90,7 @@ Content-Type: application/json
   }
 
 ###
- GET http://localhost:5000/api/category
+ GET https://great-lakes-econim-forum-be.onrender.com/api/category
 
  
 ###

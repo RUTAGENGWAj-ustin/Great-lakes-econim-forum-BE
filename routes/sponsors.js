@@ -48,7 +48,7 @@ router.post('/', authMiddleware, adminMiddleware, upload.single('logo'), async (
 // Get All Sponsors
 router.get('/', async (req, res) => {
   try {
-    const sponsors = await find();
+    const sponsors = await Sponsor.find();
     res.json(sponsors);
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });

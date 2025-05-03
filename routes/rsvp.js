@@ -25,7 +25,7 @@ router.post('/', authMiddleware, async (req, res) => {
 // Get RSVPs for a specific event
 router.get('/:eventId', async (req, res) => {
   try {
-    const rsvps = await find({ eventId: req.params.eventId });
+    const rsvps = await Rsvp.find({ eventId: req.params.eventId });
     res.json(rsvps);
   } catch (err) {
     res.status(500).json({ msg: 'Error retrieving RSVPs' });
@@ -35,7 +35,7 @@ router.get('/:eventId', async (req, res) => {
 // Get User's RSVP Status for a Specific Event
 router.get('/user/:eventId', authMiddleware, async (req, res) => {
   try {
-    const rsvp = await findOne({ eventId: req.params.eventId, user: req.user.id });
+    const rsvp = await Rsvp.findOne({ eventId: req.params.eventId, user: req.user.id });
     if (!rsvp) return res.status(404).json({ msg: 'RSVP not found' });
     res.json(rsvp);
   } catch (err) {

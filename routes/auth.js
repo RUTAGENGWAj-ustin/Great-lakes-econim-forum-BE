@@ -12,7 +12,7 @@ import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-    let user = await findOne({ email });
+    let user = await User.findOne({ email });
     if (user) return res.status(400).json({ msg: 'User already exists' });
 
     const salt = await genSalt(10);
@@ -48,7 +48,7 @@ router.post('/login', async (req, res) => {
 // Get User Profile (Protected Route)
 router.get('/profile', authMiddleware, async (req, res) => {
   try {
-    const user = await findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select('-password');
     res.json(user);
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });
@@ -58,7 +58,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
 // Get All Users (Admin Only)
 router.get('/users', authMiddleware, adminMiddleware, async (req, res) => {
   try {
-    const users = await find().select('-password');
+    const users = await User.find().select('-password');
     res.json(users);
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });

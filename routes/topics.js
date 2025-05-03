@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 // Get Topic by ID
 router.get('/:id', async (req, res) => {
   try {
-    const topic = await findById(req.params.id);
+    const topic = await Topic.findById(req.params.id);
     if (!topic) return res.status(404).json({ msg: 'Topic not found' });
     res.json(topic);
   } catch (err) {
@@ -39,7 +39,7 @@ router.get('/:id', async (req, res) => {
 // Update Topic (Admin Only)
 router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
-    const topic = await findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const topic = await Topic.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!topic) return res.status(404).json({ msg: 'Topic not found' });
     res.json(topic);
   } catch (err) {
@@ -50,7 +50,7 @@ router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
 // Delete Topic (Admin Only)
 router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
-    const topic = await findByIdAndDelete(req.params.id);
+    const topic = await Topic.findByIdAndDelete(req.params.id);
     if (!topic) return res.status(404).json({ msg: 'Topic not found' });
     res.json({ msg: 'Topic deleted' });
   } catch (err) {

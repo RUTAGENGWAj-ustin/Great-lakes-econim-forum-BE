@@ -47,7 +47,7 @@ router.post('/', authMiddleware, adminMiddleware, upload.single('image'), async 
 // Get All News
 router.get('/', async (req, res) => {
   try {
-    const news = await find();
+    const news = await News.find();
     res.json(news);
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });
@@ -57,7 +57,7 @@ router.get('/', async (req, res) => {
 // Get News by ID
 router.get('/:id', async (req, res) => {
   try {
-    const newsItem = await findById(req.params.id);
+    const newsItem = await News.findById(req.params.id);
     if (!newsItem) return res.status(404).json({ msg: 'News article not found' });
     res.json(newsItem);
   } catch (err) {
@@ -89,7 +89,7 @@ router.put(
       }
 
       // Update the news item in the database
-      const newsItem = await findByIdAndUpdate(req.params.id, updateData, {
+      const newsItem = await News.findByIdAndUpdate(req.params.id, updateData, {
         new: true,
       });
 
@@ -105,7 +105,7 @@ router.put(
 // Delete News (Admin Only)
 router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
-    const newsItem = await findByIdAndDelete(req.params.id);
+    const newsItem = await News.findByIdAndDelete(req.params.id);
     if (!newsItem) return res.status(404).json({ msg: 'News article not found' });
     res.json({ msg: 'News article deleted' });
   } catch (err) {

@@ -38,7 +38,7 @@ router.post('/confirm', authMiddleware, async (req, res) => {
     
     if (!confirmedPayment) return res.status(400).json({ msg: 'Payment failed' });
     
-    const payment = await findOneAndUpdate(
+    const payment = await Payment.findOneAndUpdate(
       { paymentIntentId },
       { status: 'confirmed' },
       { new: true }
@@ -53,7 +53,7 @@ router.post('/confirm', authMiddleware, async (req, res) => {
 // Get Payment Status (Admin & User)
 router.get('/:id', authMiddleware, async (req, res) => {
   try {
-    const payment = await findById(req.params.id);
+    const payment = await Payment.findById(req.params.id);
     if (!payment) return res.status(404).json({ msg: 'Payment not found' });
     res.json(payment);
   } catch (err) {

@@ -58,7 +58,7 @@ router.get('/', async (req, res) => {
 // Get Sponsor by ID
 router.get('/:id', async (req, res) => {
   try {
-    const sponsor = await findById(req.params.id);
+    const sponsor = await Sponsor.findById(req.params.id);
     if (!sponsor) return res.status(404).json({ msg: 'Sponsor not found' });
     res.json(sponsor);
   } catch (err) {
@@ -83,7 +83,7 @@ router.put(
       }
 
       // Update sponsor
-      const updatedSponsor = await findByIdAndUpdate(
+      const updatedSponsor = await Sponsor.findByIdAndUpdate(
         req.params.id,
         {
           name,
@@ -107,7 +107,7 @@ router.put(
 // Delete Sponsor (Admin Only)
 router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
-    const sponsor = await findByIdAndDelete(req.params.id);
+    const sponsor = await Sponsor.findByIdAndDelete(req.params.id);
     if (!sponsor) return res.status(404).json({ msg: 'Sponsor not found' });
     res.json({ msg: 'Sponsor deleted' });
   } catch (err) {

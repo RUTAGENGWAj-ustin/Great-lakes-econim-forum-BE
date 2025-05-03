@@ -68,7 +68,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ2NDg5M2NkMGNl
 ###
 GET  https://great-lakes-econim-forum-be.onrender.com/api/events
 ###
-GET  https://great-lakes-econim-forum-be.onrender.com/api/speakers
+GET  https://great-lakes-econim-forum-be.onrender.com/api/sponsors
 ###
 GET  https://great-lakes-econim-forum-be.onrender.com/api/topics
 
